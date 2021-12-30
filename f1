@@ -1,0 +1,21 @@
+%2020.11
+%image-edge-restoring-filtering
+%LQ
+%figure 1-1   smoothing
+close all
+clear all
+
+filename ='tire.tif';
+r = 3;
+
+I = im2double(imread(filename));
+I= imnoise(I,'salt & pepper',0.05);
+imwrite(I,'result\f1_1_I.png');
+
+
+avgfilter = fspecial('average',[2*r+1,2*r+1]);
+I_box = imfilter(I, avgfilter, 'replicate');
+figure;imshow(I_box);imwrite(I_box,'result\f1_1_I_box.png');
+
+I_er_box = imEdgeRestoringfilter(I_box,I,r);
+figure;imshow(I_er_box);imwrite(I_er_box,'result\f1_1_I_box_er.png');
