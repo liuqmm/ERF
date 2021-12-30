@@ -11,10 +11,10 @@ iteration = 10;
 I = im2double(imread(filename));%I= imnoise(I,'salt & pepper',0.05);
 imwrite(I,'result\f3_0_I.png');
 
-for r = 1:4
-    I_s_box = SideWindowBoxFilter(I, r, iteration);
-    figure;imshow(I_s_box);imwrite(I_s_box,['result\f3_0_I_s_box_r' int2str(r) '.png']);
-end
+%for r = 1:4
+%    I_s_box = SideWindowBoxFilter(I, r, iteration);
+%    figure;imshow(I_s_box);imwrite(I_s_box,['result\f3_0_I_s_box_r' int2str(r) '.png']);
+%end
 
 
 r =2
