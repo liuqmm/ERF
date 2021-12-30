@@ -1,0 +1,48 @@
+%2020.11
+%image-edge-restoring-filtering
+%LQ
+%figure 3   smoothing
+close all
+clear all
+
+filename ='onion.png';
+r = 3;
+
+spatialSigma_bil = 3
+sigma_gau = 2;
+
+dos_B = 0.3;
+dos_G = 0.1;
+
+
+I = im2double(imread(filename));
+imwrite(I,'result\f3_1_I.png');
+
+%%
+avgfilter = fspecial('average',[2*r+1,2*r+1]);
+I_box = imfilter(I, avgfilter, 'replicate');
+figure;imshow(I_box);imwrite(I_box,'result\f3_1_I_box.png');
+I_er_box = imEdgeRestoringfilter(I_box,I,r);
+figure;imshow(I_er_box);imwrite(I_er_box,'result\f3_1_I_box_er.png');
+
+
+%%
+I_gaus= imgaussfilt(I,sigma_gau,'FilterSize',[2*r+1,2*r+1]);
+figure;imshow(I_gaus);imwrite(I_gaus,'result\f3_1_I_gaus.png');
+I_er_gaus = imEdgeRestoringfilter(I_gaus,I,r);
+figure;imshow(I_er_gaus);imwrite(I_er_gaus,'result\f3_1_I_gaus_er.png');
+
+
+%%
+I_bil = imbilatfilt(I,dos_B,spatialSigma_bil, 'NeighborhoodSize',2*r+1); %imbilatfilt(I,degreeOfSmoothing,spatialSigma)
+figure;imshow(I_bil);imwrite(I_bil,'result\f3_1_I_bil.png');
+I_er_bil = imEdgeRestoringfilter(I_bil,I,r);
+figure;imshow(I_er_bil);imwrite(I_er_bil,'result\f3_1_I_bil_er.png');
+
+
+%%
+I_gui= imguidedfilter(I, 'NeighborhoodSize',[2*r+1 2*r+1],'DegreeOfSmoothing',dos_G);
+figure;imshow(I_gui);imwrite(I_gui,'result\f3_1_I_gui.png');
+I_er_gui = imEdgeRestoringfilter(I_gui,I,r);
+figure;imshow(I_er_gui);imwrite(I_er_gui,'result\f3_1_I_gui_er.png');
+
