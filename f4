@@ -1,0 +1,91 @@
+%2020.11
+%image-edge-restoring-filtering
+%LQ
+%figure 4
+close all
+clear all
+
+filename = 'football.jpg';
+it = 5;
+r = 3;
+
+spatialSigma_bil = 3;
+sigma_gau = 2;
+
+dos_B = 0.3;
+dos_G = 0.1
+
+I = im2double(imread(filename));
+I= imnoise(I,'salt & pepper',0.05);
+
+figure;imshow(I);imwrite(I,'result\f3_2_I.png');
+
+
+%%
+avgfilter = fspecial('average',[2*r+1,2*r+1]);
+I_input = I;
+for i = 1:it
+    I_box = imfilter(I_input, avgfilter, 'replicate');
+    I_input = I_box;
+end
+imwrite(I_box,'result\f3_2_I_box.png');
+
+I_input = I;
+for i = 1:it
+    I_box = imfilter(I_input, avgfilter, 'replicate');
+    I_er_box = imEdgeRestoringfilter(I_box,I_input,r);
+    I_input = I_er_box;
+end
+imwrite(I_er_box,'result\f3_2_I_box_er.png');
+
+%%
+I_input = I;
+for i = 1:it
+    I_gaus= imgaussfilt(I_input,sigma_gau,'FilterSize',[2*r+1,2*r+1]);
+    I_input = I_gaus;
+end
+figure;imshow(I_gaus);imwrite(I_gaus,'result\f3_2_I_gaus.png');
+
+
+I_input = I;
+for i = 1:it
+    I_gaus= imgaussfilt(I_input,sigma_gau,'FilterSize',[2*r+1,2*r+1]);
+    I_er_gaus = imEdgeRestoringfilter(I_gaus,I_input,r);
+    I_input = I_er_gaus;
+end
+figure;imshow(I_er_gaus);imwrite(I_er_gaus,'result\f3_2_I_gaus_er.png');
+
+
+%%
+I_input = I;
+for i = 1:it
+    I_bil = imbilatfilt(I_input,dos_B,spatialSigma_bil, 'NeighborhoodSize',2*r+1); 
+    I_input = I_bil;
+end
+figure;imshow(I_bil);imwrite(I_bil,'result\f3_2_I_bil.png');
+
+
+I_input = I;
+for i = 1:it
+    I_bil = imbilatfilt(I_input,dos_B,spatialSigma_bil, 'NeighborhoodSize',2*r+1); 
+    I_er_bil = imEdgeRestoringfilter(I_bil,I_input,r);
+    I_input = I_er_bil;
+end
+figure;imshow(I_er_bil);imwrite(I_er_bil,'result\f3_2_I_bil_er.png');
+
+%%
+I_input = I;
+for i = 1:it
+    I_gui= imguidedfilter(I_input,'NeighborhoodSize',[2*r+1 2*r+1],'DegreeOfSmoothing',dos_G);
+    I_input = I_gui;
+end
+figure;imshow(I_gui);imwrite(I_gui,'result\f3_2_I_gui.png');
+
+
+I_input = I;
+for i = 1:it
+    I_gui= imguidedfilter(I_input,'NeighborhoodSize',[2*r+1 2*r+1],'DegreeOfSmoothing',dos_G);
+    I_er_gui = imEdgeRestoringfilter(I_gui,I_input,r);
+    I_input = I_er_gui;
+end
+figure;imshow(I_er_gui);imwrite(I_er_gui,'result\f3_2_I_gui_er.png');
