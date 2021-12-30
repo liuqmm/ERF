@@ -1,0 +1,38 @@
+%2020.11
+%image-edge-restoring-filtering
+%LQ
+%figure 5  Image enhancement
+
+close all
+clear all
+
+filename = 'coloredChips.png';
+r = 5;
+spatialSigma_bil = 5;
+en_ = 5;
+dos_B = 0.3;
+dos_G = 0.1;
+
+
+I = im2double(imread(filename));
+[h,w,c] = size(I);
+figure;imshow(I);imwrite(I,'result\f3_3_I.png');
+
+I_bil = imbilatfilt(I,dos_B,spatialSigma_bil, 'NeighborhoodSize',2*r+1); 
+I_bil_en = I_bil + en_*(I - I_bil); 
+figure;imshow(I_bil_en);imwrite(I_bil_en,'result\f3_3_I_bil.png');
+
+I_bil = imbilatfilt(I,dos_B,spatialSigma_bil, 'NeighborhoodSize',2*r+1); 
+I_er_bil = imEdgeRestoringfilter(I_bil,I,r);
+I_er_bil_en = I_er_bil + en_*(I - I_er_bil); 
+figure;imshow(I_er_bil_en);imwrite(I_er_bil_en,'result\f3_3_I_bil_er.png');
+
+I_gui= imguidedfilter(I,'NeighborhoodSize',[2*r+1 2*r+1],'DegreeOfSmoothing',dos_G);%,
+I_gui_en = I_gui + en_*(I - I_gui); 
+figure;imshow(I_gui_en);imwrite(I_gui_en,'result\f3_3_I_gui.png');
+
+I_gui= imguidedfilter(I,'NeighborhoodSize',[2*r+1 2*r+1],'DegreeOfSmoothing',dos_G);%,
+I_er_gui = imEdgeRestoringfilter(I_gui,I,r);
+I_er_gui_en = I_er_gui + en_*(I - I_er_gui); 
+figure;imshow(I_er_gui_en);imwrite(I_er_gui_en,'result\f3_3_I_gui_er.png');
+
